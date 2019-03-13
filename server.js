@@ -12,7 +12,7 @@ const cars = [
 
 
 app.get('/', (req, res) => {
-  res.send('use this :) localhost:1414/api/cars/ ')
+  res.send('use this :) localhost:80/api/cars/ ')
 })
 
 app.get('/api/cars', (req, res) => {
@@ -28,7 +28,7 @@ app.get('/api/cars/:id', (req, res) => {
 app.post('/api/cars', (req, res) => {
   const { error } = validateCar(req.body)
 
-  if(error) return res.status(400).send(error.details[0].message)
+  if(error) return res.status(400).send(error.details[0])
   const car = {
     id: cars.length + 1,
     name: req.body.name,
@@ -45,7 +45,7 @@ if(!car) return res.status(404).send('The car with given id was not found')
 
 const { error } = validateCarPut(req.body)
 
-if(error) return res.status(400).send(error.details[0].message)
+if(error) return res.status(400).send(error.details[0])
 
 car.name = req.body.name
 car.bought = req.body.bought
@@ -59,7 +59,7 @@ app.patch('/api/cars/:id', (req, res) => {
 
 const { error } = validateCar(req.body)
 
-  if(error) return res.status(400).send(error.details[0].message);
+  if(error) return res.status(400).send(error.details[0]);
 
   if(req.body.name) {
     car.name = req.body.name
@@ -83,9 +83,12 @@ cars.splice(index, 1)
 res.send(car)
 })
 
+app.use('/api/*', (req,res) => {
+  res.status(405).end();
+});
 const port = 3000
 
-app.listen(port, () => console.log(`Listening ... on port 1414`))
+app.listen(port, () => console.log(`Listening ... on port 80`))
 
 function validateCar(car) {
   const schema = {
